@@ -3,12 +3,10 @@
 namespace cisl {
 
 static Table vt, ft;
-inline std::shared_ptr<Cons> to_cons(const ObjPtr &obj) {
-  return std::static_pointer_cast<Cons>(obj);
-}
 
-#define CAR(name) to_cons(name)->car
-#define CDR(name) to_cons(name)->cdr
+#define TO_CONS(obj) std::static_pointer_cast<Cons>(obj)
+#define CAR(name) TO_CONS(name)->car
+#define CDR(name) TO_CONS(name)->cdr
 #define CADR(name) CAR(CDR(name))
 #define CDDR(name) CDR(CDR(name))
 #define CONS(val, list) std::make_shared<Cons>(Cons(val, list))
@@ -19,7 +17,7 @@ inline std::shared_ptr<Cons> to_cons(const ObjPtr &obj) {
 #define PRINT_TO_STRING(obj) obj->to_string()
 #define PRINC_TO_STRING(obj) to_std_string(PRINT_TO_STRING(obj))
 #define SETF(a, b) a = b
-#define AREF(obj, index) obj[index]
+#define ELT(obj, index) obj[index]
 #define LAMBDA(args, body)                                                     \
   std::make_shared<Function>(Function(args, body, vt, ft))
 #define FUNCALL(obj, args) (*obj)(args)
@@ -32,14 +30,14 @@ inline std::shared_ptr<Cons> to_cons(const ObjPtr &obj) {
 DEFVAR(nil, std::static_pointer_cast<Object>(std::make_shared<Nil>(Nil())));
 DEFMACRO(defun, obj, {
   DEFVAR(f, PRINC_TO_STRING(CAR(obj)));
-  SETF(AREF(ft, f), LAMBDA(CADR(obj), CDDR(obj)));
-  return AREF(ft, f);
+  SETF(ELT(ft, f), LAMBDA(CADR(obj), CDDR(obj)));
+  return ELT(ft, f);
 });
 DEFMACRO(defvar, obj, {
   DEFVAR(eval, new Eval(vt, ft));
   DEFVAR(v, PRINC_TO_STRING(CAR(obj)));
-  SETF(AREF(vt, v), FUNCALL(eval, CADR(obj)));
-  return AREF(vt, v);
+  SETF(ELT(vt, v), FUNCALL(eval, CADR(obj)));
+  return ELT(vt, v);
 });
 DEFUN(car, obj, { return CAR(obj); });
 DEFUN(cdr, obj, { return CDR(obj); });
