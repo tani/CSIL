@@ -18,10 +18,11 @@ typedef enum {
   FUNCTION,
   MACRO,
   ARRAY,
-  STRING
+  STRING,
+  NIL
 } Type;
 
-class String;
+struct String;
 
 class Object {
 public:
@@ -65,8 +66,7 @@ private:
   char value;
 };
 
-class Array : public Object {
-public:
+struct Array : public Object {
   Array();
   Array(std::vector<ObjPtr> value);
   Type type() const override;
@@ -74,29 +74,27 @@ public:
   std::vector<ObjPtr> value;
 };
 
-class String : public Array {
-public:
+struct String : public Array {
   String();
   String(std::vector<std::shared_ptr<Character>> value);
   Type type() const override;
   String to_string() const override;
 };
 
-class List : public Object {};
+struct List : public Object {};
 
-class Cons : public List {
-public:
+struct Cons : public List {
   Cons(const ObjPtr &hd, const ObjPtr &tl);
   Type type() const override;
   String to_string() const override;
-  ObjPtr car() const;
-  ObjPtr cdr() const;
-  ObjPtr set_car(const ObjPtr &obj);
-  ObjPtr set_cdr(const ObjPtr &obj);
+  ObjPtr car;
+  ObjPtr cdr;
+};
 
-private:
-  ObjPtr hd;
-  ObjPtr tl;
+class Nil : public List {
+public:
+  Type type() const override;
+  String to_string() const override;
 };
 
 class Symbol : public Object {
@@ -109,13 +107,12 @@ private:
   String value;
 };
 
-ObjPtr last(const ObjPtr &obj);
-
 typedef std::unordered_map<std::string, ObjPtr> Table;
 
 class Macro : public Object {
-  // Macro := Cell* -> Cell*
+  // Macro := Cons* -> Cons*
 public:
+  Macro(std::function<ObjPtr(const ObjPtr &)> macro);
   Macro(const ObjPtr &args, const ObjPtr &body, Table &vt, Table &ft);
   Type type() const override;
   String to_string() const override;
@@ -126,8 +123,9 @@ private:
 };
 
 class Function : public Object {
-  // Function := Cell* -> Object*
+  // Function := Cons* -> Object*
 public:
+  Function(std::function<ObjPtr(const ObjPtr &)> function);
   Function(const ObjPtr &args, const ObjPtr &body, Table &vt, Table &ft);
   Type type() const override;
   String to_string() const override;
@@ -146,4 +144,7 @@ private:
   Table vt;
   Table ft;
 };
+
+std::vector<std::shared_ptr<Character>> to_cisl_string(std::string chars);
+std::string to_std_string(String chars);
 }
