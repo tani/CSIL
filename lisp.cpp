@@ -23,6 +23,3 @@ bool Object::operator==(Object obj) {
   }
   return false;
 }
-
-ObjPtr car(ObjPtr obj) { return obj->cons.car; }
-ObjPtr cdr(ObjPtr obj) { return obj->cons.cdr; }

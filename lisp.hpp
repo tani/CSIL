@@ -28,5 +28,5 @@ struct Object {
   Atom atom;
 };
 
-ObjPtr car(ObjPtr);
-ObjPtr cdr(ObjPtr);
+inline ObjPtr car(ObjPtr obj) { return obj->cons.car; }
+inline ObjPtr cdr(ObjPtr obj) { return obj->cons.cdr; }
