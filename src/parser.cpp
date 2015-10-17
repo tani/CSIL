@@ -19,7 +19,6 @@ int tokenize(std::string src, std::vector<std::string> &tokens) {
 }
 
 int parse_atom(std::vector<std::string>::iterator token, ObjPtr obj) {
-  createAtom(obj);
   if (regex_match(*token, std::regex(_FLOAT))) {
     createAtom(obj, std::stof(*token));
   } else if (regex_match(*token, std::regex(_INTEGER))) {
