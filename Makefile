@@ -13,4 +13,4 @@ cisl: $(OBJS)
 
 .PHONY: clean
 clean:
-	rm *.o
+	rm *.o cisl

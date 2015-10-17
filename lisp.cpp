@@ -23,3 +23,5 @@ bool Object::operator==(Object obj) {
   }
   return false;
 }
+Atom::Atom() {}
+Atom::~Atom() { function.~function(); }

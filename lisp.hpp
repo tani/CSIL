@@ -6,14 +6,16 @@ struct Object;
 typedef std::shared_ptr<Object> ObjPtr;
 
 struct Atom {
+  Atom();
+  ~Atom();
   enum { INTEGER, FLOAT, CHARACTER, SYMBOL, FUNCTION } type;
   union {
     int integer;
     float real;
     char character;
     size_t symbol;
+    std::function<ObjPtr(ObjPtr)> function;
   };
-  std::function<ObjPtr(ObjPtr)> function;
 };
 
 struct Cons {
