@@ -24,7 +24,11 @@ bool Object::operator==(Object obj) {
   return false;
 }
 Atom::Atom() {}
-Atom::~Atom() {}
+Atom::~Atom() {
+  if (type == FUNCTION) {
+    function.~function();
+  }
+}
 Cons::Cons(){};
 Cons::~Cons() {
   car.reset();

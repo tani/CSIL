@@ -3,11 +3,7 @@
 #include <iostream>
 #define DEF(tb, name, args, body)                                              \
   tb[intern(#name)] = std::make_shared<Object>();                              \
-  tb[intern(#name)]->type = Object::ATOM;                                      \
-  new (&tb[intern(#name)]->atom) Atom();                                       \
-  tb[intern(#name)]->atom.type = Atom::FUNCTION;                               \
-  new (&tb[intern(#name)]->atom.function)                                      \
-      std::function<ObjPtr(ObjPtr)>([=](ObjPtr args) -> ObjPtr body)
+  createFunction(tb[intern(#name)], [=](ObjPtr args) -> ObjPtr body)
 #define DEFMACRO(name, args, body) DEF(mt, name, args, body)
 #define DEFUN(name, args, body) DEF(ft, name, args, body)
 #define DEFORM(name, args, body) DEF(sf, name, args, body)
@@ -40,7 +36,7 @@ ObjPtr eval(ObjPtr obj) {
 
   return nullptr;
 }
-
+void print(ObjPtr);
 int init() {
 
   DEFMACRO(defun, obj, {
@@ -48,10 +44,7 @@ int init() {
     auto args = car(cdr(obj));
     auto body = cdr(cdr(obj));
     ft[name->atom.symbol] = std::make_shared<Object>();
-    ft[name->atom.symbol]->type = Object::ATOM;
-    new (&ft[name->atom.symbol]->atom) Atom();
-    ft[name->atom.symbol]->atom.type = Atom::FUNCTION;
-    ft[name->atom.symbol]->atom.function = [=](ObjPtr vars) -> ObjPtr {
+    createFunction(ft[name->atom.symbol], [=](ObjPtr vars) -> ObjPtr {
       auto a = args;
       auto v = vars;
       while (v != nullptr && a != nullptr) {
@@ -63,10 +56,10 @@ int init() {
       ObjPtr result = nullptr;
       while (b != nullptr) {
         result = eval(car(b));
-        b = b->cons.cdr;
+        b = cdr(b);
       }
       return result;
-    };
+    });
     return name;
   });
 
@@ -95,7 +88,7 @@ int init() {
     auto val = car(obj);
     auto list = car(cdr(obj));
     auto cons = std::make_shared<Object>();
-    new (&cons->cons) Cons();
+    createCons(cons);
     cons->cons.car = val;
     cons->cons.cdr = list;
     return cons;
@@ -117,10 +110,7 @@ int init() {
     auto args = car(obj);
     auto body = cdr(obj);
     auto lambda = std::make_shared<Object>();
-    lambda->type = Object::ATOM;
-    new (&lambda->atom) Atom();
-    lambda->atom.type = Atom::FUNCTION;
-    lambda->atom.function = [=](ObjPtr vars) {
+    createFunction(lambda, [=](ObjPtr vars) {
       auto a = args;
       auto v = vars;
       while (v != nullptr && a != nullptr) {
@@ -135,7 +125,7 @@ int init() {
         b = b->cons.cdr;
       }
       return result;
-    };
+    });
     return lambda;
   });
 

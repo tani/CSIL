@@ -38,3 +38,17 @@ struct Object {
 
 inline ObjPtr car(ObjPtr obj) { return obj->cons.car; }
 inline ObjPtr cdr(ObjPtr obj) { return obj->cons.cdr; }
+inline void createCons(ObjPtr obj) {
+  obj->type = Object::CONS;
+  new (&obj->cons) Cons();
+}
+inline void createAtom(ObjPtr obj) {
+  obj->type = Object::ATOM;
+  new (&obj->atom) Atom();
+}
+inline void createFunction(ObjPtr obj, std::function<ObjPtr(ObjPtr)> func) {
+  obj->type = Object::ATOM;
+  new (&obj->atom) Atom();
+  obj->atom.type = Atom::FUNCTION;
+  new (&obj->atom.function) std::function<ObjPtr(ObjPtr)>(func);
+}

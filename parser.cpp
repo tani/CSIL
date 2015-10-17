@@ -21,8 +21,7 @@ int tokenize(std::string src, std::vector<std::string> &tokens) {
 }
 
 int parse_atom(std::vector<std::string>::iterator token, ObjPtr obj) {
-  obj->type = Object::ATOM;
-  new (&obj->atom) Atom();
+  createAtom(obj);
   if (regex_match(*token, std::regex(_FLOAT))) {
     obj->atom.type = Atom::FLOAT;
     obj->atom.real = std::stof(*token);
@@ -49,8 +48,7 @@ int parse_1ist(std::vector<std::string>::iterator token, ObjPtr obj) {
   if (*token == ")") {
     return 1;
   }
-  obj->type = Object::CONS;
-  new (&obj->cons) Cons();
+  createCons(obj);
   obj->cons.car = std::make_shared<Object>();
   obj->cons.cdr = std::make_shared<Object>();
   if (*token == "(") {
