@@ -25,8 +25,15 @@ bool Object::operator==(Object obj) {
 }
 Atom::Atom() {}
 Atom::~Atom() {
-  if (type == FUNCTION) {
+  switch (type) {
+  case FUNCTION:
     function.~function();
+    break;
+  case SYMBOL:
+    symbol.~basic_string();
+    break;
+  default:
+    break;
   }
 }
 Cons::Cons(){};

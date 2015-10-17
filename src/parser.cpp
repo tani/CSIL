@@ -2,9 +2,7 @@
 #include <vector>
 #include <string>
 #include "lisp.hpp"
-
-static std::hash<std::string> intern;
-
+#include "util.hpp"
 #define _FLOAT "\\d+\\.\\d*|\\d*\\.\\d+"
 #define _INTEGER "\\d+"
 #define _CHARACTER "#\\\\."
@@ -23,17 +21,13 @@ int tokenize(std::string src, std::vector<std::string> &tokens) {
 int parse_atom(std::vector<std::string>::iterator token, ObjPtr obj) {
   createAtom(obj);
   if (regex_match(*token, std::regex(_FLOAT))) {
-    obj->atom.type = Atom::FLOAT;
-    obj->atom.real = std::stof(*token);
+    createAtom(obj, std::stof(*token));
   } else if (regex_match(*token, std::regex(_INTEGER))) {
-    obj->atom.type = Atom::INTEGER;
-    obj->atom.integer = std::stoi(*token);
+    createAtom(obj, std::stoi(*token));
   } else if (regex_match(*token, std::regex(_SYMBOL))) {
-    obj->atom.type = Atom::SYMBOL;
-    obj->atom.symbol = intern(*token);
+    createAtom(obj, *token);
   } else if (regex_match(*token, std::regex(_CHARACTER))) {
-    obj->atom.type = Atom::CHARACTER;
-    obj->atom.character = token->at(2);
+    createAtom(obj, token->at(2));
   }
   return 0;
 }

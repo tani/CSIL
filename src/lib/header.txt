@@ -1,0 +1,21 @@
+#include "lisp.hpp"
+#include "util.hpp"
+
+inline void defun(Env& env,Symbol name, Function func) {
+  env.functions[name] = std::make_shared<Object>();
+  createAtom(env.functions[name], func);
+}
+inline void defmacro(Env& env,Symbol name, Function func) {
+  env.macros[name] = std::make_shared<Object>();
+  createAtom(env.macros[name], func);
+}
+inline void deform(Env& env,Symbol name, Function func) {
+  env.forms[name] = std::make_shared<Object>();
+  createAtom(env.forms[name], func);
+}
+
+ObjPtr eval(ObjPtr,Env);
+void init(Env& global_env){
+#define DEFMACRO(name,args,env,body) defmacro(global_env,#name,[&](ObjPtr args,Env env) -> ObjPtr body)
+#define DEFUN(name,args,env,body) defun(global_env,#name,[&](ObjPtr args,Env env) -> ObjPtr body)
+#define DEFORM(name,args,env,body) deform(global_env,#name,[&](ObjPtr args,Env env) -> ObjPtr body)
