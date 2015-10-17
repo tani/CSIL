@@ -19,15 +19,21 @@ struct Atom {
 };
 
 struct Cons {
+  Cons();
+  ~Cons();
   ObjPtr car;
   ObjPtr cdr;
 };
 
 struct Object {
+  Object();
+  ~Object();
   bool operator==(Object);
   enum { CONS, ATOM } type;
-  Cons cons;
-  Atom atom;
+  union {
+    Cons cons;
+    Atom atom;
+  };
 };
 
 inline ObjPtr car(ObjPtr obj) { return obj->cons.car; }

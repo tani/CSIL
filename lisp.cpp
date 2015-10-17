@@ -24,4 +24,20 @@ bool Object::operator==(Object obj) {
   return false;
 }
 Atom::Atom() {}
-Atom::~Atom() { function.~function(); }
+Atom::~Atom() {}
+Cons::Cons(){};
+Cons::~Cons() {
+  car.reset();
+  cdr.reset();
+};
+Object::Object() {}
+Object::~Object() {
+  switch (type) {
+  case ATOM:
+    atom.~Atom();
+    break;
+  case CONS:
+    cons.~Cons();
+    break;
+  }
+}

@@ -1,10 +1,13 @@
 #include "lisp.hpp"
 #include <unordered_map>
+#include <iostream>
 #define DEF(tb, name, args, body)                                              \
   tb[intern(#name)] = std::make_shared<Object>();                              \
   tb[intern(#name)]->type = Object::ATOM;                                      \
+  new (&tb[intern(#name)]->atom) Atom();                                       \
   tb[intern(#name)]->atom.type = Atom::FUNCTION;                               \
-  tb[intern(#name)]->atom.function = [](ObjPtr args) -> ObjPtr body
+  new (&tb[intern(#name)]->atom.function)                                      \
+      std::function<ObjPtr(ObjPtr)>([=](ObjPtr args) -> ObjPtr body)
 #define DEFMACRO(name, args, body) DEF(mt, name, args, body)
 #define DEFUN(name, args, body) DEF(ft, name, args, body)
 #define DEFORM(name, args, body) DEF(sf, name, args, body)
@@ -15,7 +18,6 @@ static std::unordered_map<symbol, ObjPtr> ft;
 static std::unordered_map<symbol, ObjPtr> mt;
 static std::unordered_map<symbol, ObjPtr> sf;
 static std::unordered_map<symbol, ObjPtr> vt;
-
 ObjPtr eval(ObjPtr obj) {
   if (obj->type == Object::ATOM) {
     if (obj->atom.type == Atom::SYMBOL) {
@@ -23,18 +25,19 @@ ObjPtr eval(ObjPtr obj) {
     } else {
       return obj;
     }
-  } else if (ft.count(car(obj)->atom.symbol)) {
+  } else if (ft.count(car(obj)->atom.symbol) != 0) {
     auto args = cdr(obj);
     while (args != nullptr) {
       args->cons.car = eval(car(args));
       args = args->cons.cdr;
     }
     return ft[car(obj)->atom.symbol]->atom.function(cdr(obj));
-  } else if (mt.count(car(obj)->atom.symbol)) {
+  } else if (mt.count(car(obj)->atom.symbol) != 0) {
     return eval(mt[car(obj)->atom.symbol]->atom.function(cdr(obj)));
-  } else if (sf.count(car(obj)->atom.symbol)) {
+  } else if (sf.count(car(obj)->atom.symbol) != 0) {
     return sf[car(obj)->atom.symbol]->atom.function(cdr(obj));
   }
+
   return nullptr;
 }
 
@@ -46,6 +49,7 @@ int init() {
     auto body = cdr(cdr(obj));
     ft[name->atom.symbol] = std::make_shared<Object>();
     ft[name->atom.symbol]->type = Object::ATOM;
+    new (&ft[name->atom.symbol]->atom) Atom();
     ft[name->atom.symbol]->atom.type = Atom::FUNCTION;
     ft[name->atom.symbol]->atom.function = [=](ObjPtr vars) -> ObjPtr {
       auto a = args;
@@ -91,6 +95,7 @@ int init() {
     auto val = car(obj);
     auto list = car(cdr(obj));
     auto cons = std::make_shared<Object>();
+    new (&cons->cons) Cons();
     cons->cons.car = val;
     cons->cons.cdr = list;
     return cons;
@@ -113,6 +118,7 @@ int init() {
     auto body = cdr(obj);
     auto lambda = std::make_shared<Object>();
     lambda->type = Object::ATOM;
+    new (&lambda->atom) Atom();
     lambda->atom.type = Atom::FUNCTION;
     lambda->atom.function = [=](ObjPtr vars) {
       auto a = args;
@@ -136,7 +142,6 @@ int init() {
   DEFUN(apply, obj, { return car(obj)->atom.function(car(cdr(obj))); });
 
   DEFORM(function, obj, { return ft[car(obj)->atom.symbol]; });
-
   return 0;
 }
 #undef DEFUN

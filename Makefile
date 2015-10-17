@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -Wall -std=c++11
+CXXFLAGS = -Wall -std=c++11 -ggdb
 SRC = lisp.cpp printer.cpp parser.cpp eval.cpp main.cpp
 OBJS = $(patsubst %.cpp,%.o,$(SRC))
 
