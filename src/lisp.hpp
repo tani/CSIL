@@ -4,18 +4,17 @@
 #include <unordered_map>
 #include <string>
 
-typedef std::string Symbol;
 struct Object;
 struct Environment;
 typedef Environment Env;
+typedef std::string Symbol;
 typedef std::shared_ptr<Object> ObjPtr;
-typedef std::function<ObjPtr(ObjPtr, Environment)> Function;
+typedef std::function<ObjPtr(ObjPtr)> Function;
 
 struct Environment {
   std::unordered_map<Symbol, ObjPtr> functions;
   std::unordered_map<Symbol, ObjPtr> variables;
   std::unordered_map<Symbol, ObjPtr> macros;
-  std::unordered_map<Symbol, ObjPtr> forms;
 };
 
 struct Atom {

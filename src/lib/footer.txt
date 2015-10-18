@@ -1,4 +1,0 @@
-}
-#undef DEFMACRO
-#undef DEFUN
-#undef DEFORM

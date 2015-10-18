@@ -1,3 +1,4 @@
+#pragma once
 #include <string>
 #include <vector>
 #include <ostream>
@@ -15,4 +16,4 @@ int tokenize(std::string,std::vector<Symbol>&);
 int parse(std::vector<Symbol>,ObjPtr);
 ObjPtr eval(ObjPtr,Env);
 void print(std::ostream&,ObjPtr);
-void init(Env& global_env);
+void init();

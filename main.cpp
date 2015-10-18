@@ -3,12 +3,9 @@
 #include <iostream>
 #include <string>
 
-void init(Env &);
 ObjPtr eval(ObjPtr, Env);
 int main(int argc, char const *argv[]) {
-  Env global_env;
-  init(global_env);
-  REPL repl(global_env);
+  REPL repl;
   std::string line;
   while (true) {
     getline(std::cin, line);

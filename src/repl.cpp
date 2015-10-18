@@ -1,6 +1,6 @@
 #include "repl.hpp"
 #include <sstream>
-REPL::REPL() { init(env); };
+REPL::REPL() {init();};
 std::string REPL::operator()(std::string exp){
   std::vector<Symbol> tokens;
   std::stringstream result;
