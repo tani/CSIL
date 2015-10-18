@@ -1,5 +1,5 @@
-#include "lisp.hpp"
-#include "repl.hpp"
+#include "src/lisp.hpp"
+#include "src/repl.hpp"
 #include <iostream>
 #include <string>
 

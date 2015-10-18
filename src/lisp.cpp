@@ -1,5 +1,4 @@
 #include "lisp.hpp"
-
 bool Object::operator==(Object obj) {
   if (type == CONS) {
     return obj.type == CONS && obj.cons.car == cons.car && obj.cons.cdr == cons.cdr;
