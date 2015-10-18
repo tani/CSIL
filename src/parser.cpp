@@ -10,15 +10,14 @@
 #define _SYMBOL "[[:alnum:]+\\-<>/+&=.?_!$%:@\\[\\]^{}~]+"
 #define _PARENTHESIS "[()]"
 
-int tokenize(std::string src, std::vector<std::string> &tokens) {
-  std::regex regex(_FLOAT "|" _INTEGER "|" _CHARACTER "|" _STRING "|" _SYMBOL
-                          "|" _PARENTHESIS);
+int tokenize(std::string src, std::vector<Symbol> &tokens) {
+  std::regex regex(_FLOAT "|" _INTEGER "|" _CHARACTER "|" _STRING "|" _SYMBOL "|" _PARENTHESIS);
   std::copy(std::sregex_token_iterator(src.cbegin(), src.cend(), regex),
             std::sregex_token_iterator(), std::back_inserter(tokens));
   return 0;
 }
 
-int parse_atom(std::vector<std::string>::iterator token, ObjPtr obj) {
+int parse_atom(std::vector<Symbol>::iterator token, ObjPtr obj) {
   if (regex_match(*token, std::regex(_FLOAT))) {
     createAtom(obj, std::stof(*token));
   } else if (regex_match(*token, std::regex(_INTEGER))) {
@@ -37,7 +36,8 @@ int parse_atom(std::vector<std::string>::iterator token, ObjPtr obj) {
 #undef _STRING
 #undef _SYMBOL
 #undef _PARENTHESIS
-int parse_1ist(std::vector<std::string>::iterator token, ObjPtr obj) {
+
+int parse_1ist(std::vector<Symbol>::iterator token, ObjPtr obj) {
   if (*token == ")") {
     return 1;
   }
@@ -58,7 +58,8 @@ int parse_1ist(std::vector<std::string>::iterator token, ObjPtr obj) {
   return 0;
 }
 
-int parse(std::vector<std::string>::iterator token, ObjPtr obj) {
+int parse(std::vector<Symbol> tokens, ObjPtr obj) {
+  auto token = tokens.begin();
   if (*token == "(") {
     return parse_1ist(++token, obj);
   }

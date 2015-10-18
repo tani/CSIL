@@ -1,19 +1,22 @@
 CXX = g++
 CXXFLAGS = -Wall -std=c++11 -ggdb
-SRC = src/eval.cpp src/lisp.cpp src/main.cpp src/parser.cpp src/printer.cpp src/init.cpp
+SRC = $(wildcard src/*.cpp)
 OBJS = $(patsubst %.cpp,%.o,$(SRC))
 
 all: cisl
 
-cisl: $(OBJS)
+cisl: $(OBJS) src/init.o
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
-.cpp.o: src/init.cpp
+%.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $^ -o $@
 
-src/init.cpp: src/lib/header.txt src/lib/footer.txt
-	cat src/lib/header.txt src/lib/*.cpp src/lib/footer.txt > src/init.cpp
+src/init.o: src/init.cpp
+	$(CXX) $(CXXFLAGS) -c $^ -o $@
+	
+src/init.cpp:
+	cat src/lib/header.txt $(wildcard src/lib/*.cpp) src/lib/footer.txt > src/init.cpp
 
 .PHONY: clean
 clean:
-	rm -f src/*.o cisl src/init.cpp core
+	rm -f $(OBJS) cisl src/init.cpp core

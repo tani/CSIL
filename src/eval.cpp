@@ -12,12 +12,9 @@ ObjPtr eval(ObjPtr obj, Env env) {
     for (auto a = cdr(obj); a != nullptr; a = cdr(a)) {
       a->cons.car = eval(car(a), env);
     }
-    return env.functions.at(car(obj)->atom.symbol)
-        ->atom.function(cdr(obj), env);
+    return env.functions.at(car(obj)->atom.symbol) ->atom.function(cdr(obj), env);
   } else if (env.macros.count(car(obj)->atom.symbol) != 0) {
-    return eval(
-        env.macros.at(car(obj)->atom.symbol)->atom.function(cdr(obj), env),
-        env);
+    return eval(env.macros.at(car(obj)->atom.symbol)->atom.function(cdr(obj), env), env);
   } else if (env.forms.count(car(obj)->atom.symbol) != 0) {
     return env.forms.at(car(obj)->atom.symbol)->atom.function(cdr(obj), env);
   }
