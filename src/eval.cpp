@@ -5,7 +5,7 @@ extern std::unordered_map<Symbol,ObjPtr> buildin_macros;
 extern std::unordered_map<Symbol,ObjPtr> buildin_functions;
 std::unordered_map<Symbol,ObjPtr> buildin_macros;
 std::unordered_map<Symbol,ObjPtr> buildin_functions;
-ObjPtr eval(ObjPtr obj, Env env) {
+ObjPtr eval(ObjPtr obj, Env& env) {
   if (obj->type == Object::ATOM) {
     if (obj->atom.type == Atom::SYMBOL) {
       return env.variables.at(obj->atom.symbol);

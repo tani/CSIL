@@ -1,5 +1,12 @@
 #include "repl.hpp"
 #include <sstream>
+
+int tokenize(std::string,std::vector<Symbol>&);
+int parse(std::vector<Symbol>,ObjPtr);
+ObjPtr eval(ObjPtr,Env&);
+void print(std::ostream&,ObjPtr);
+void init();
+
 REPL::REPL() {init();};
 std::string REPL::operator()(std::string exp){
   std::vector<Symbol> tokens;
