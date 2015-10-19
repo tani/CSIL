@@ -1,9 +1,6 @@
 #pragma once
 #include "lisp.hpp"
 
-inline ObjPtr car(ObjPtr obj) { return obj->cons.car; }
-inline ObjPtr cdr(ObjPtr obj) { return obj->cons.cdr; }
-
 inline void createCons(ObjPtr obj) {
   new (&obj->cons) Cons();
   obj->type = Object::CONS;
@@ -41,4 +38,14 @@ inline void createAtom(ObjPtr obj, Function value) {
   new (&obj->atom.function) Function(value);
   obj->type = Object::ATOM;
   obj->atom.type = Atom::FUNCTION;
+}
+
+inline ObjPtr car(ObjPtr obj) { return obj->cons.car; }
+inline ObjPtr cdr(ObjPtr obj) { return obj->cons.cdr; }
+inline ObjPtr cons(ObjPtr val,ObjPtr list) {
+  auto cons = std::make_shared<Object>();
+  createCons(cons);
+  cons->cons.car = val;
+  cons->cons.cdr = list;
+  return cons;
 }

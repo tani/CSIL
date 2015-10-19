@@ -88,21 +88,23 @@ void init(){
     auto name = car(obj);
     auto args = car(cdr(obj));
     auto body = cdr(cdr(obj));
-    return name;
+    auto define = std::make_shared<Object>();
+    auto lambda = std::make_shared<Object>();
+    createAtom(define,"define");
+    createAtom(lambda,"lambda");
+    return cons(define,cons(name,cons(cons(lambda,cons(args,cons(body,nullptr))),nullptr)));
   })
   DEFMACRO(defvar,args,{
     auto name = car(args);
     auto var = car(cdr(args));
-    return name;
+    auto define = std::make_shared<Object>();
+    createAtom(define,"define");
+    return cons(define,cons(name,cons(var,nullptr)));
   })
   DEFUN(cons,args,{
     auto val = car(args);
     auto list = car(cdr(args));
-    auto cons = std::make_shared<Object>();
-    createCons(cons);
-    cons->cons.car = val;
-    cons->cons.cdr = list;
-    return cons;
+    return cons(val,list);
   })
   DEFUN(car,args,{
     return car(car(args));
