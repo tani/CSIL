@@ -16,4 +16,6 @@ clean:
 	rm -f $(OBJS) cisl test main.o t/test.o
 
 test: $(OBJS) t/test.o
-	$(CXX) $(CXXFLAG) $^ -o $@ ; ./test
+	$(CXX) $(CXXFLAG) $^ -o $@ ;\
+	./test                     ;\
+	rm -f $(OBJS) cisl test main.o t/test.o
