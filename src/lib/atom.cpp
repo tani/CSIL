@@ -7,7 +7,11 @@ using namespace core;
 class Atom {
 public:
   ObjPtr operator()(ObjPtr exp) {
-    return car(exp)->type == Object::ATOM ? car(exp) : nullptr;
+    if (car(exp)->type == Object::ATOM) {
+      return createAtom(std::make_shared<Object>(), true);
+    } else {
+      return nullptr;
+    }
   }
 };
 }

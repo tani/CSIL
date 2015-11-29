@@ -9,6 +9,9 @@ int print(std::ostream &output, ObjPtr obj) {
     output << "nil";
   } else if (obj->type == Object::ATOM) {
     switch (obj->atom.type) {
+    case Atom::BOOLEAN:
+      output << "t";
+      break;
     case Atom::INTEGER:
       output << obj->atom.integer;
       break;

@@ -7,7 +7,11 @@ using namespace core;
 class Eq {
 public:
   ObjPtr operator()(ObjPtr exp) {
-    return *(car(exp)) == *(cadr(exp)) ? car(exp) : nullptr;
+    if (*(car(exp)) == *(cadr(exp))) {
+      return createAtom(std::make_shared<Object>(), true);
+    } else {
+      return nullptr;
+    }
   }
 };
 }

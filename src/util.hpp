@@ -13,6 +13,13 @@ inline ObjPtr createAtom(ObjPtr obj) {
   obj->type = Object::ATOM;
   return obj;
 }
+inline ObjPtr createAtom(ObjPtr obj, bool value) {
+  new (&obj->atom) Atom();
+  obj->type = Object::ATOM;
+  obj->atom.type = Atom::BOOLEAN;
+  obj->atom.boolean = value;
+  return obj;
+}
 inline ObjPtr createAtom(ObjPtr obj, int value) {
   new (&obj->atom) Atom();
   obj->type = Object::ATOM;
