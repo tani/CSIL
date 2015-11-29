@@ -116,6 +116,6 @@ void init(){
     return car(args)->type == Object::ATOM ? car(args) : nullptr;
   })
   DEFUN(eq,args,{
-    return car(args) == cadr(args) ? car(args) : nullptr;
+    return *(car(args)) == *(cadr(args)) ? car(args) : nullptr;
   })
 }

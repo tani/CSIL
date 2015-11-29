@@ -1,7 +1,9 @@
 #include "lisp.hpp"
-bool Object::operator==(Object obj) {
+bool Object::operator==(Object& obj) {
   if (type == CONS) {
-    return obj.type == CONS && obj.cons.car == cons.car && obj.cons.cdr == cons.cdr;
+    return obj.type == CONS
+      && *(obj.cons.car) == *(cons.car)
+      && *(obj.cons.cdr) == *(cons.cdr);
   }
   switch (atom.type) {
   case Atom::INTEGER:   return obj.type == ATOM && obj.atom.integer == atom.integer;

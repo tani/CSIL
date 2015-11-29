@@ -40,7 +40,7 @@ struct Cons {
 struct Object {
   Object();
   ~Object();
-  bool operator==(Object);
+  bool operator==(Object&);
   enum { CONS, ATOM } type;
   union {
     Cons cons;
