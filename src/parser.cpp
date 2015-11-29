@@ -3,6 +3,10 @@
 #include <string>
 #include "lisp.hpp"
 #include "util.hpp"
+
+namespace islisp {
+namespace io {
+using namespace core;
 #define _FLOAT "\\d+\\.\\d*|\\d*\\.\\d+"
 #define _INTEGER "\\d+"
 #define _CHARACTER "#\\\\."
@@ -64,4 +68,6 @@ int parse(std::vector<Symbol> tokens, ObjPtr obj) {
     return parse_1ist(++token, obj);
   }
   return parse_atom(token, obj);
+}
+}
 }

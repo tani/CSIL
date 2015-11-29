@@ -1,11 +1,14 @@
 #include "lisp.hpp"
 #include "util.hpp"
 #include <unordered_map>
-extern std::unordered_map<Symbol,ObjPtr> buildin_macros;
-extern std::unordered_map<Symbol,ObjPtr> buildin_functions;
-std::unordered_map<Symbol,ObjPtr> buildin_macros;
-std::unordered_map<Symbol,ObjPtr> buildin_functions;
-ObjPtr eval(ObjPtr obj, Env& env) {
+
+namespace islisp {
+namespace core {
+
+extern std::unordered_map<Symbol, ObjPtr> buildin_macros;
+extern std::unordered_map<Symbol, ObjPtr> buildin_functions;
+
+ObjPtr eval(ObjPtr obj, Env &env) {
   if (obj->type == Object::ATOM) {
     if (obj->atom.type == Atom::SYMBOL) {
       return env.variables.at(obj->atom.symbol);
@@ -44,10 +47,11 @@ ObjPtr eval(ObjPtr obj, Env& env) {
       auto args = cadr(obj);
       auto body = caddr(obj);
       auto lambda = std::make_shared<Object>();
-      createAtom(lambda,[=](ObjPtr vars) -> ObjPtr {
+      createAtom(lambda, [=](ObjPtr vars) -> ObjPtr {
         ObjPtr result;
         auto closure = env;
-        for (auto a = args, v = vars; v != nullptr && a != nullptr; a = cdr(a), v = cdr(v)) {
+        for (auto a = args, v = vars; v != nullptr && a != nullptr;
+             a = cdr(a), v = cdr(v)) {
           if (car(a)->atom.symbol == "&rest") {
             closure.variables[cadr(a)->atom.symbol] = v;
             break;
@@ -62,10 +66,10 @@ ObjPtr eval(ObjPtr obj, Env& env) {
       return lambda;
     } else if (sym == "define") {
       auto name = cadr(obj);
-      auto value = eval(caddr(obj),env);
-      if(value->type == Object::ATOM && value->atom.type == Atom::FUNCTION){
+      auto value = eval(caddr(obj), env);
+      if (value->type == Object::ATOM && value->atom.type == Atom::FUNCTION) {
         env.functions[name->atom.symbol] = value;
-      }else{
+      } else {
         env.variables[name->atom.symbol] = value;
       }
       return name;
@@ -73,49 +77,5 @@ ObjPtr eval(ObjPtr obj, Env& env) {
   }
   return nullptr;
 }
-
-void init(){
-  auto lambda = std::make_shared<Object>();
-  #define DEFUN(name,args,body)              \
-    lambda = std::make_shared<Object>();     \
-    createAtom(lambda,[=](ObjPtr args)body); \
-    buildin_functions[#name] = lambda;
-  #define DEFMACRO(name,args,body)           \
-    lambda = std::make_shared<Object>();     \
-    createAtom(lambda,[=](ObjPtr args)body); \
-    buildin_macros[#name] = lambda;
-  DEFMACRO(defun,obj,{
-    auto name = car(obj);
-    auto args = cadr(obj);
-    auto body = cddr(obj);
-    auto define = std::make_shared<Object>();
-    auto lambda = std::make_shared<Object>();
-    createAtom(define,"define");
-    createAtom(lambda,"lambda");
-    return cons(define,cons(name,cons(cons(lambda,cons(args,cons(body,nullptr))),nullptr)));
-  })
-  DEFMACRO(defvar,args,{
-    auto name = car(args);
-    auto var = cadr(args);
-    auto define = std::make_shared<Object>();
-    createAtom(define,"define");
-    return cons(define,cons(name,cons(var,nullptr)));
-  })
-  DEFUN(cons,args,{
-    auto val = car(args);
-    auto list = cadr(args);
-    return cons(val,list);
-  })
-  DEFUN(car,args,{
-    return car(car(args));
-  })
-  DEFUN(cdr,args,{
-    return cdr(car(args));
-  })
-  DEFUN(atom,args,{
-    return car(args)->type == Object::ATOM ? car(args) : nullptr;
-  })
-  DEFUN(eq,args,{
-    return *(car(args)) == *(cadr(args)) ? car(args) : nullptr;
-  })
+}
 }

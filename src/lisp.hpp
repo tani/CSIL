@@ -4,6 +4,8 @@
 #include <unordered_map>
 #include <string>
 
+namespace islisp {
+namespace core {
 struct Object;
 struct Environment;
 typedef Environment Env;
@@ -40,10 +42,12 @@ struct Cons {
 struct Object {
   Object();
   ~Object();
-  bool operator==(Object&);
+  bool operator==(Object &);
   enum { CONS, ATOM } type;
   union {
     Cons cons;
     Atom atom;
   };
 };
+}
+}

@@ -8,6 +8,7 @@ class REPL {
 public:
   REPL();
   std::string operator()(std::string);
+
 private:
-  Env env;
+  islisp::core::Env env;
 };
