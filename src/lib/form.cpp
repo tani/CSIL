@@ -3,7 +3,7 @@
 
 namespace islisp {
 namespace core {
-ObjPtr eval(ObjPtr, Environment &);
+ObjPtr eval(ObjPtr,Environment&);
 }
 namespace form {
 using namespace core;

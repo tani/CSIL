@@ -1,8 +1,9 @@
 #include "util.hpp"
 #include "lisp.hpp"
-#include "lib/define.cpp"
+#include "lib/defvar.cpp"
+#include "lib/defun.cpp"
 #include "lib/cons.cpp"
-#include "lib/equal.cpp"
+#include "lib/eq.cpp"
 #include "lib/atom.cpp"
 #include "lib/form.cpp"
 #include <unordered_map>

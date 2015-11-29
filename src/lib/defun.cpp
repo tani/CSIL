@@ -17,16 +17,5 @@ public:
     return cons(define, cons(name, cons(cons(lambda, cons(args, cons(body, nullptr))), nullptr)));
   }
 };
-
-class Defvar {
-public:
-  ObjPtr operator()(ObjPtr exp) {
-    auto name = car(exp);
-    auto var = cadr(exp);
-    auto define = std::make_shared<Object>();
-    createAtom(define, "define");
-    return cons(define, cons(name, cons(var, nullptr)));
-  }
-};
 }
 }
