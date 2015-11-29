@@ -6,6 +6,10 @@
 #include "lib/eq.cpp"
 #include "lib/atom.cpp"
 #include "lib/form.cpp"
+#include "lib/if.cpp"
+#include "lib/quote.cpp"
+#include "lib/lambda.cpp"
+#include "lib/apply.cpp"
 #include <unordered_map>
 
 namespace islisp {
