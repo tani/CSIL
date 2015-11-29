@@ -42,6 +42,10 @@ inline void createAtom(ObjPtr obj, Function value) {
 
 inline ObjPtr car(ObjPtr obj) { return obj->cons.car; }
 inline ObjPtr cdr(ObjPtr obj) { return obj->cons.cdr; }
+inline ObjPtr cddr(ObjPtr obj) { return cdr(cdr(obj)); }
+inline ObjPtr cadr(ObjPtr obj) { return car(cdr(obj)); }
+inline ObjPtr caddr(ObjPtr obj) { return car(cdr(cdr(obj)));}
+inline ObjPtr cadddr(ObjPtr obj) { return car(cdr(cdr(cdr(obj))));}
 inline ObjPtr cons(ObjPtr val,ObjPtr list) {
   auto cons = std::make_shared<Object>();
   createCons(cons);

@@ -31,25 +31,25 @@ ObjPtr eval(ObjPtr obj, Env& env) {
     } else if (sym == "quote") {
       return car(cdr(obj));
     } else if (sym == "if") {
-      auto test = car(cdr(obj));
-      auto then = car(cdr(cdr(obj)));
-      auto otherwise = car(cdr(cdr(cdr(obj))));
+      auto test = cadr(obj);
+      auto then = caddr(obj);
+      auto otherwise = cadddr(obj);
       if (eval(test, env) != nullptr) {
         return eval(then, env);
       }
       return eval(otherwise, env);
     } else if (sym == "apply") {
-      return car(cdr(obj))->atom.function(car(cdr(cdr(obj))));
+      return cadr(obj)->atom.function(caddr(obj));
     } else if (sym == "lambda") {
-      auto args = car(cdr(obj));
-      auto body = car(cdr(cdr(obj)));
+      auto args = cadr(obj);
+      auto body = caddr(obj);
       auto lambda = std::make_shared<Object>();
       createAtom(lambda,[=](ObjPtr vars) -> ObjPtr {
         ObjPtr result;
         auto closure = env;
         for (auto a = args, v = vars; v != nullptr && a != nullptr; a = cdr(a), v = cdr(v)) {
           if (car(a)->atom.symbol == "&rest") {
-            closure.variables[car(cdr(a))->atom.symbol] = v;
+            closure.variables[cadr(a)->atom.symbol] = v;
             break;
           }
           closure.variables[car(a)->atom.symbol] = car(v);
@@ -61,8 +61,8 @@ ObjPtr eval(ObjPtr obj, Env& env) {
       });
       return lambda;
     } else if (sym == "define") {
-      auto name = car(cdr(obj));
-      auto value = eval(car(cdr(cdr(obj))),env);
+      auto name = cadr(obj);
+      auto value = eval(caddr(obj),env);
       if(value->type == Object::ATOM && value->atom.type == Atom::FUNCTION){
         env.functions[name->atom.symbol] = value;
       }else{
@@ -86,8 +86,8 @@ void init(){
     buildin_macros[#name] = lambda;
   DEFMACRO(defun,obj,{
     auto name = car(obj);
-    auto args = car(cdr(obj));
-    auto body = cdr(cdr(obj));
+    auto args = cadr(obj);
+    auto body = cddr(obj);
     auto define = std::make_shared<Object>();
     auto lambda = std::make_shared<Object>();
     createAtom(define,"define");
@@ -96,14 +96,14 @@ void init(){
   })
   DEFMACRO(defvar,args,{
     auto name = car(args);
-    auto var = car(cdr(args));
+    auto var = cadr(args);
     auto define = std::make_shared<Object>();
     createAtom(define,"define");
     return cons(define,cons(name,cons(var,nullptr)));
   })
   DEFUN(cons,args,{
     auto val = car(args);
-    auto list = car(cdr(args));
+    auto list = cadr(args);
     return cons(val,list);
   })
   DEFUN(car,args,{
@@ -116,6 +116,6 @@ void init(){
     return car(args)->type == Object::ATOM ? car(args) : nullptr;
   })
   DEFUN(eq,args,{
-    return car(args) == car(cdr(args)) ? car(args) : nullptr;
+    return car(args) == cadr(args) ? car(args) : nullptr;
   })
 }

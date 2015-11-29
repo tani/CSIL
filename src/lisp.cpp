@@ -21,10 +21,7 @@ Atom::~Atom() {
   }
 }
 Cons::Cons(){};
-Cons::~Cons() {
-  car.reset();
-  cdr.reset();
-};
+Cons::~Cons() {};
 Object::Object() {}
 Object::~Object() {
   switch (type) {
