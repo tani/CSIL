@@ -14,9 +14,7 @@ public:
     auto lambda = std::make_shared<Object>();
     createAtom(define, "define");
     createAtom(lambda, "lambda");
-    return cons(define,
-                cons(name, cons(cons(lambda, cons(args, cons(body, nullptr))),
-                                nullptr)));
+    return cons(define, cons(name, cons(cons(lambda, cons(args, cons(body, nullptr))), nullptr)));
   }
 };
 

@@ -18,6 +18,8 @@ bool Object::operator==(Object &obj) {
     return obj.type == ATOM && obj.atom.symbol == atom.symbol;
   case Atom::FUNCTION:
     return obj.type == ATOM;
+  case Atom::FORM:
+    return obj.type == ATOM;
   }
   return false;
 }
@@ -26,6 +28,9 @@ Atom::~Atom() {
   switch (type) {
   case FUNCTION:
     function.~function();
+    break;
+  case FORM:
+    form.~function();
     break;
   case SYMBOL:
     symbol.~basic_string();

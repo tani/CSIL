@@ -48,6 +48,13 @@ inline ObjPtr createAtom(ObjPtr obj, Function value) {
   obj->atom.type = Atom::FUNCTION;
   return obj;
 }
+inline ObjPtr createAtom(ObjPtr obj, Form value) {
+  new (&obj->atom) Atom();
+  new (&obj->atom.function) Form(value);
+  obj->type = Object::ATOM;
+  obj->atom.type = Atom::FORM;
+  return obj;
+}
 
 inline ObjPtr car(ObjPtr obj) { return obj->cons.car; }
 inline ObjPtr cdr(ObjPtr obj) { return obj->cons.cdr; }

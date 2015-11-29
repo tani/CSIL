@@ -24,6 +24,9 @@ int print(std::ostream &output, ObjPtr obj) {
     case Atom::FUNCTION:
       output << "#<FUNCTION>";
       break;
+    case Atom::FORM:
+      output << "#<FORM>";
+      break;
     }
   } else {
     output << "(";

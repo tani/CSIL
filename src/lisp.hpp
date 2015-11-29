@@ -12,6 +12,7 @@ typedef Environment Env;
 typedef std::string Symbol;
 typedef std::shared_ptr<Object> ObjPtr;
 typedef std::function<ObjPtr(ObjPtr)> Function;
+typedef std::function<ObjPtr(ObjPtr,Environment&)> Form;
 
 struct Environment {
   std::unordered_map<Symbol, ObjPtr> functions;
@@ -22,12 +23,13 @@ struct Environment {
 struct Atom {
   Atom();
   ~Atom();
-  enum { INTEGER, FLOAT, CHARACTER, SYMBOL, FUNCTION } type;
+  enum { INTEGER, FLOAT, CHARACTER, SYMBOL, FUNCTION, FORM} type;
   union {
     int integer;
     float real;
     char character;
     Function function;
+    Form form;
     Symbol symbol;
   };
 };
