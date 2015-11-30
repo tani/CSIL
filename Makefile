@@ -1,5 +1,5 @@
 CXX = clang++
-CXXFLAG = -Wall -std=c++11
+CXXFLAG = -g -Wall -std=c++11
 SRC = $(wildcard src/*.cpp)
 OBJS = $(patsubst %.cpp,%.o,$(SRC))
 

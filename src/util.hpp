@@ -16,7 +16,7 @@ inline ObjPtr createAtom(ObjPtr obj) {
 inline ObjPtr createAtom(ObjPtr obj, bool value) {
   new (&obj->atom) Atom();
   obj->type = Object::ATOM;
-  obj->atom.type = Atom::BOOLEAN;
+  obj->atom.type = value ? Atom::BOOLEAN : Atom::NIL;
   obj->atom.boolean = value;
   return obj;
 }
@@ -62,7 +62,8 @@ inline ObjPtr createAtom(ObjPtr obj, Form value) {
   obj->atom.type = Atom::FORM;
   return obj;
 }
-
+inline ObjPtr nil(){return createAtom(std::make_shared<Object>(),false);}
+inline ObjPtr t(){return createAtom(std::make_shared<Object>(),true);}
 inline ObjPtr car(ObjPtr obj) { return obj->cons.car; }
 inline ObjPtr cdr(ObjPtr obj) { return obj->cons.cdr; }
 inline ObjPtr cddr(ObjPtr obj) { return cdr(cdr(obj)); }

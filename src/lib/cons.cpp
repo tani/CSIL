@@ -7,9 +7,9 @@ using namespace core;
 class Cons {
 public:
   core::ObjPtr operator()(core::ObjPtr exp) {
-    auto val = core::car(exp);
-    auto list = core::cadr(exp);
-    return core::cons(val, list);
+    auto val = car(exp);
+    auto list = cadr(exp);
+    return cons(val, list);
   }
 };
 class Car {

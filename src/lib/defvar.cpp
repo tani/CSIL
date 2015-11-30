@@ -11,7 +11,7 @@ public:
     auto var = cadr(exp);
     auto define = std::make_shared<Object>();
     createAtom(define, "define");
-    return cons(define, cons(name, cons(var, nullptr)));
+    return cons(define, cons(name, cons(var, nil())));
   }
 };
 }

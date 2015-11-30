@@ -10,7 +10,7 @@ public:
     if (*(car(exp)) == *(cadr(exp))) {
       return createAtom(std::make_shared<Object>(), true);
     } else {
-      return nullptr;
+      return nil();
     }
   }
 };

@@ -13,7 +13,7 @@ public:
     auto test = car(exp);
     auto then = cadr(exp);
     auto otherwise = caddr(exp);
-    if (eval(test, env) != nullptr) {
+    if (eval(test, env) != nil()) {
       return eval(then, env);
     }
     return eval(otherwise, env);

@@ -15,7 +15,8 @@ using namespace core;
 #define _PARENTHESIS "[()]"
 
 int tokenize(std::string src, std::vector<Symbol> &tokens) {
-  std::regex regex(_FLOAT "|" _INTEGER "|" _CHARACTER "|" _STRING "|" _SYMBOL "|" _PARENTHESIS);
+  std::regex regex(_FLOAT "|" _INTEGER "|" _CHARACTER "|" _STRING "|" _SYMBOL
+                          "|" _PARENTHESIS);
   std::copy(std::sregex_token_iterator(src.cbegin(), src.cend(), regex),
             std::sregex_token_iterator(), std::back_inserter(tokens));
   return 0;
@@ -27,7 +28,13 @@ int parse_atom(std::vector<Symbol>::iterator token, ObjPtr obj) {
   } else if (regex_match(*token, std::regex(_INTEGER))) {
     createAtom(obj, std::stoi(*token));
   } else if (regex_match(*token, std::regex(_SYMBOL))) {
-    createAtom(obj, *token);
+    if ("nil" == *token) {
+      createAtom(obj, false);
+    } else if ("t" == *token) {
+      createAtom(obj, true);
+    } else {
+      createAtom(obj, *token);
+    }
   } else if (regex_match(*token, std::regex(_CHARACTER))) {
     createAtom(obj, token->at(2));
   }
@@ -57,7 +64,7 @@ int parse_1ist(std::vector<Symbol>::iterator token, ObjPtr obj) {
     parse_atom(token, car(obj));
   }
   if (parse_1ist(++token, cdr(obj))) {
-    obj->cons.cdr = nullptr;
+    createAtom(cdr(obj),false);
   }
   return 0;
 }

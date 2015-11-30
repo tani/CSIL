@@ -9,6 +9,8 @@ bool Object::operator==(Object &obj) {
         && *(obj.cons.cdr) == *(cons.cdr);
   }
   switch (atom.type) {
+  case Atom::NIL:
+    return obj.type == ATOM && obj.atom.boolean == atom.boolean;
   case Atom::BOOLEAN:
     return obj.type == ATOM && obj.atom.boolean == atom.boolean;
   case Atom::INTEGER:

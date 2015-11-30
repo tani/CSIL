@@ -1,14 +1,18 @@
 #include "lisp.hpp"
+#include "util.hpp"
 #include <ostream>
 
 namespace islisp {
 namespace io {
 using namespace core;
 int print(std::ostream &output, ObjPtr obj) {
-  if (obj == nullptr) {
+  if (obj == nil()) {
     output << "nil";
   } else if (obj->type == Object::ATOM) {
     switch (obj->atom.type) {
+    case Atom::NIL:
+        output << "nil";
+        break;
     case Atom::BOOLEAN:
       output << "t";
       break;

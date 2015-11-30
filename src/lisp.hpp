@@ -23,7 +23,7 @@ struct Environment {
 struct Atom {
   Atom();
   ~Atom();
-  enum { INTEGER, FLOAT, CHARACTER, SYMBOL, FUNCTION, FORM, BOOLEAN} type;
+  enum { INTEGER, FLOAT, CHARACTER, SYMBOL, FUNCTION, FORM, BOOLEAN, NIL} type;
   union {
     bool boolean;
     int integer;
